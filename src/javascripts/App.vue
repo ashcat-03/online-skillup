@@ -1,27 +1,25 @@
 <template>
-  <div>
+  <div class="base">
     <p>
       <img class="logo" src="../images/logo.jpg" alt="ロゴ">
       <span class="sample">チャット</span>
     </p>
+  <div class="chat">
+    <li v-for="(row,index) in list" :key="index">
+      <div class="balloon1">
+        <p class="name">{{ row.name }}</p>
+        <p class="text"> {{ row.message }}</p>
+      </div>
+    </li>
+  </div>
 
-      <ul>
-      <li v-for="item in list">
-        <div class="balloon1">
-        {{ item.name }}
-        <br>
-        {{ item.text }}
-        </div>
-      </li>
-      </ul>
-
-    <form @submit="onSubmit">
-      <div class="input">
+  <form @submit="onSubmit">
+    <div class="input">
       name<input v-model="$data.name" type="text">
       massage<textarea v-model="$data.text" type="text"></textarea>
       <button type="submit">送信</button>
-      </div>
-    </form>
+    </div>
+  </form>
   </div>
 </template>
 
@@ -40,7 +38,7 @@ export default {
       message: '',
       text: '',
       name,
-      list: []
+      list: [],
     };
   },
   created() {
@@ -48,9 +46,9 @@ export default {
       console.log('connected!');
     });
 
-    socket.on('send', (message) => {
+    socket.on('get_message', (message) => {
       console.log(message);
-      this.$data.message = message;
+      this.list.push(message);
     });
   },
   methods: {
@@ -59,8 +57,11 @@ export default {
      */
     onSubmit(e) {
       e.preventDefault();
-      socket.emit('send', this.$data.text);
-      this.list.push({ name: this.$data.name, text: this.$data.text });
+      socket.emit('post_message', {
+        name: this.name,
+        message: this.text
+      });
+      this.message = '';
     },
   }
 };
@@ -76,9 +77,11 @@ export default {
 }
 
 .input {
-  display: block;
   position: relative;
-  margin-left: 2em;
+  display: block;
+  background-color: #e0ffff;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 li {
@@ -99,7 +102,7 @@ textarea {
 .balloon1 {
   position: relative;
   display: inline-block;
-  margin: 1.5em 0;
+  margin: 1em 0;
   padding: 7px 10px;
   min-width: 120px;
   max-width: 100%;
@@ -132,6 +135,18 @@ textarea {
 .balloon1 p {
   margin: 0;
   padding: 0;
+}
+
+.name {
+  color: #008080;
+  font-size: 0.9em;
+}
+
+.text {
+  color: #000080;
+  font-size: 1.2em;
+  word-wrap: break-word;
+  white-space: normal;
 }
 
 </style>
