@@ -5,9 +5,19 @@
       <span class="sample">チャット</span>
     </p>
 
-      <ul id="massage">{{$data.message}}</ul>
-    <form @submit="onSubmit" name="my_form">
+      <ul>
+      <li v-for="item in list">
+        <div class="balloon1">
+        {{ item.name }}
+        <br>
+        {{ item.text }}
+        </div>
+      </li>
+      </ul>
+
+    <form @submit="onSubmit">
       <div class="input">
+      name<input v-model="$data.name" type="text">
       massage<textarea v-model="$data.text" type="text"></textarea>
       <button type="submit">送信</button>
       </div>
@@ -28,7 +38,9 @@ export default {
   data() {
     return {
       message: '',
-      text: ''
+      text: '',
+      name,
+      list: []
     };
   },
   created() {
@@ -48,6 +60,7 @@ export default {
     onSubmit(e) {
       e.preventDefault();
       socket.emit('send', this.$data.text);
+      this.list.push({ name: this.$data.name, text: this.$data.text });
     },
   }
 };
