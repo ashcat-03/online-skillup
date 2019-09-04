@@ -7,20 +7,20 @@
   <div class="chat">
     <li v-for="(row,index) in list" :key="index">
       <div class="balloon1">
-        <p class="name">{{ row.name }}</p>
+        <p class="name">{{ row.name }}:</p>
         <p class="text"> {{ row.message }}</p>
       </div>
     </li>
   </div>
 
-  <form @submit="onSubmit">
-    <div class="input">
-      name<input v-model="$data.name" type="text">
-      massage<textarea v-model="$data.text" type="text"></textarea>
-      <button type="submit">送信</button>
-    </div>
-  </form>
+  <div class="input">
+    <form @submit="onSubmit">
+        name<input v-model="$data.name" type="text">
+        massage<textarea v-model="$data.text" type="text"></textarea>
+        <button type="submit">送信</button>
+    </form>
   </div>
+</div>
 </template>
 
 <script>
@@ -37,7 +37,7 @@ export default {
     return {
       message: '',
       text: '',
-      name,
+      name: '',
       list: [],
     };
   },
@@ -48,7 +48,8 @@ export default {
 
     socket.on('get_message', (message) => {
       console.log(message);
-      this.list.push(message);
+      this.$data.list.push(message);
+      this.scrollToBottom();
     });
   },
   methods: {
@@ -58,10 +59,10 @@ export default {
     onSubmit(e) {
       e.preventDefault();
       socket.emit('post_message', {
-        name: this.name,
-        message: this.text
+        name: this.$data.name,
+        message: this.$data.text
       });
-      this.message = '';
+      this.$data.message = '';
     },
   }
 };
@@ -74,6 +75,13 @@ export default {
 
 .sample {
   color: $red;
+}
+
+.base {
+  background-color: #f0ffff;
+  width: 100%;
+  margin: auto;
+  text-align: center;
 }
 
 .input {
@@ -92,16 +100,30 @@ li {
 .input input[type='text'] {
   display: block;
   font: 15px/24px sans-serif;
+  margin: auto;
+  padding: 0.3em;
+  transition: 0.3s;
+  border: 1px solid #1b2538;
+  border-radius: 4px;
 }
 
 textarea {
   display: block;
   font: 15px/24px sans-serif;
+  margin: auto;
+  box-sizing: border-box;
+  padding: 0.3em;
+  transition: 0.3s;
+  letter-spacing: 1px;
+  border: 1px solid #1b2538;
+  border-radius: 4px;
+  margin-bottom: 0.5em;
 }
 
 .balloon1 {
   position: relative;
   display: inline-block;
+  text-align: left;
   margin: 1em 0;
   padding: 7px 10px;
   min-width: 120px;
