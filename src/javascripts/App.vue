@@ -25,10 +25,8 @@
 
 <script>
 import socket from './utils/socket';
-
 // components
 import MyComponent from './components/MyComponent.vue';
-
 export default {
   components: {
     MyComponent
@@ -45,7 +43,6 @@ export default {
     socket.on('connect', () => {
       console.log('connected!');
     });
-
     socket.on('get_message', (message) => {
       console.log(message);
       this.$data.list.push(message);
@@ -170,5 +167,4 @@ textarea {
   word-wrap: break-word;
   white-space: normal;
 }
-
 </style>

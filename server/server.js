@@ -48,6 +48,7 @@ io.on('connection', (socket) => {
   // ユーザの参加
   socket.on('post_message', (message) => {
     console.log('post_message:', message);
+    io.emit('post_message', message);
     io.emit('get_message', message);
   });
 });
