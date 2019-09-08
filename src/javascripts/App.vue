@@ -61,6 +61,12 @@ export default {
       });
       this.$data.message = '';
     },
+
+    scrollToBottom() {
+      this.$nextTick(() => {
+        window.scrollTo(0, document.body.clientHeight);
+      });
+    },
   }
 };
 </script>
@@ -110,7 +116,6 @@ textarea {
   margin: auto;
   box-sizing: border-box;
   padding: 0.3em;
-  transition: 0.3s;
   letter-spacing: 1px;
   border: 1px solid #1b2538;
   border-radius: 4px;
